@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class BirdieScript : MonoBehaviour
 {
@@ -7,6 +8,9 @@ public class BirdieScript : MonoBehaviour
     public LogicScript logic;
     public bool birdIsAlive = true;
     public AudioSource flapSound;
+    public SpriteRenderer wingRenderer;
+    public Sprite wingUp;
+    public Sprite wingDown;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,6 +28,7 @@ public class BirdieScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && birdIsAlive)
         {
+            StartCoroutine(FlapWing());
             flapSound.Play();
             birdierigidbody2D.linearVelocity = Vector2.up * flapstrength;
         }
@@ -33,6 +38,13 @@ public class BirdieScript : MonoBehaviour
             birdIsAlive = false;
             logic.gameOver();
         }
+    }
+
+    IEnumerator FlapWing()
+    {
+        wingRenderer.sprite = wingDown;
+        yield return new WaitForSeconds(0.15f);
+        wingRenderer.sprite = wingUp;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
